@@ -465,6 +465,17 @@ h2 { margin-bottom: var(--space-5); font-size: clamp(2.375rem, 8vw, 3.3125rem); 
 }
 .signup-form input::placeholder { color: #a6a8ad; }
 .signup-form select:invalid { color: #a6a8ad; }
+.signup-form [aria-invalid="true"] { border-color: #bd3b3b; }
+.field-error {
+  display: block;
+  min-height: 0;
+  margin-top: 3px;
+  color: #a32d35;
+  font-size: 0.625rem;
+  line-height: 1.4;
+}
+.field-error:empty { display: none; }
+.field-error-terms { margin: -11px 0 12px 23px; }
 .checkbox-label { display: flex; align-items: flex-start; gap: 9px; margin: 17px 0; color: #717583; font-size: 0.5625rem; line-height: 1.6; }
 .checkbox-label input { width: 14px; height: 14px; flex: 0 0 14px; margin: 1px 0 0; accent-color: var(--color-brand); }
 .form-submit { width: 100%; min-height: 46px; justify-content: space-between; border: 0; cursor: pointer; font-size: 0.6875rem; }

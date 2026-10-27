@@ -157,10 +157,139 @@ const initSignupForm = () => {
 
   if (!signupForm || !formNote) return;
 
+  const fields = {
+    name: {
+      input: signupForm.elements.namedItem("name"),
+      error: document.getElementById("name-error"),
+    },
+    email: {
+      input: signupForm.elements.namedItem("email"),
+      error: document.getElementById("email-error"),
+    },
+    plan: {
+      input: signupForm.elements.namedItem("plan"),
+      error: document.getElementById("plan-error"),
+    },
+    terms: {
+      input: signupForm.elements.namedItem("terms"),
+      error: document.getElementById("terms-error"),
+    },
+  };
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const validationMessages = {
+    name: "Please enter your name using at least 2 characters.",
+    email: "Please enter a valid email address.",
+    plan: "Please choose a plan to continue.",
+    terms: "Please agree to be contacted about your enquiry.",
+  };
+
+  const getFieldError = (fieldName) => {
+    const value = fields[fieldName].input.value;
+
+    if (fieldName === "name" && value.trim().length < 2) {
+      return validationMessages.name;
+    }
+
+    if (fieldName === "email" && !emailPattern.test(value.trim())) {
+      return validationMessages.email;
+    }
+
+    if (fieldName === "plan" && !value) {
+      return validationMessages.plan;
+    }
+
+    if (fieldName === "terms" && !fields.terms.input.checked) {
+      return validationMessages.terms;
+    }
+
+    return "";
+  };
+
+  const showFieldError = (fieldName, message) => {
+    const { input, error } = fields[fieldName];
+    if (!input || !error) return;
+
+    error.textContent = message;
+    input.setAttribute("aria-invalid", String(Boolean(message)));
+  };
+
+  const validateField = (fieldName) => {
+    const message = getFieldError(fieldName);
+    showFieldError(fieldName, message);
+    return !message;
+  };
+
+  const clearFieldErrors = () => {
+    Object.keys(fields).forEach((fieldName) => showFieldError(fieldName, ""));
+  };
+
+  Object.keys(fields).forEach((fieldName) => {
+    const { input } = fields[fieldName];
+    const eventName = fieldName === "plan" || fieldName === "terms" ? "change" : "input";
+
+    input.addEventListener(eventName, () => {
+      validateField(fieldName);
+      formNote.textContent = "";
+    });
+  });
+
   signupForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    formNote.textContent =
-      "Thanks for sharing your project details. This demo doesn’t send submissions yet—please email hello@suadeprint.com to get in touch.";
+
+    const isValid = Object.keys(fields).reduce(
+      (valid, fieldName) => validateField(fieldName) && valid,
+      true,
+    );
+
+    if (!isValid) {
+      formNote.textContent = "Please correct the highlighted fields and try again.";
+      return;
+    }
+
+    const name = fields.name.input.value.trim();
+    const email = fields.email.input.value.trim();
+    const plan = fields.plan.input.value;
+    let signups;
+
+    try {
+      const storedSignups = localStorage.getItem("signups");
+      signups = storedSignups ? JSON.parse(storedSignups) : [];
+    } catch {
+      formNote.textContent = "We couldn’t read saved signups in this browser. Please try again.";
+      return;
+    }
+
+    if (!Array.isArray(signups)) {
+      formNote.textContent = "Saved signup data is unavailable. Please clear the signups entry and try again.";
+      return;
+    }
+
+    const normalizedEmail = email.toLowerCase();
+    const alreadySignedUp = signups.some(
+      (signup) =>
+        signup &&
+        typeof signup.email === "string" &&
+        signup.email.trim().toLowerCase() === normalizedEmail,
+    );
+
+    if (alreadySignedUp) {
+      showFieldError("email", "You've already signed up.");
+      formNote.textContent = "You've already signed up with this email address.";
+      return;
+    }
+
+    signups.push({ name, email, plan, createdAt: new Date().toISOString() });
+
+    try {
+      localStorage.setItem("signups", JSON.stringify(signups));
+    } catch {
+      formNote.textContent = "We couldn’t save your signup in this browser. Please try again.";
+      return;
+    }
+
+    signupForm.reset();
+    clearFieldErrors();
+    formNote.textContent = "Thanks for signing up! Your details have been saved in this browser.";
   });
 };
 

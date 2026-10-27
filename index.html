@@ -132,14 +132,14 @@
       <section class="signup section-pad section" id="get-started">
         <div class="container signup-panel">
           <div class="signup-copy"><p class="eyebrow eyebrow-light"><span class="eyebrow-line"></span> Your next idea starts here</p><h2>Let’s put something<br><span class="serif-accent">good into print.</span></h2><p>Tell us a little about your project. We’ll take it from there — with a thoughtful quote and a real person on the other end.</p><div class="signup-aside"><span>✳</span><p>No pressure. No print jargon.<br>Just a good place to start.</p></div></div>
-          <form class="signup-form card" id="signup-form">
+          <form class="signup-form card" id="signup-form" novalidate>
             <div class="form-heading"><span>01 / SAY HELLO</span><span>LET’S BEGIN</span></div>
-            <label for="full-name">Your full name</label><input id="full-name" name="name" type="text" autocomplete="name" placeholder="e.g. Alex Morgan" required>
-            <label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
-            <label for="plan">What are you thinking?</label><select id="plan" name="plan" required><option value="" selected disabled>Choose a starting point</option><option value="Basic">Basic — a thoughtful first run</option><option value="Pro">Pro — room to make a mark</option><option value="Business">Business — let’s make it a big thing</option><option value="Not sure yet">I’m not sure yet</option></select>
-            <label class="checkbox-label" for="terms"><input id="terms" name="terms" type="checkbox" required><span>I agree to be contacted about my print enquiry.</span></label>
+            <label for="full-name">Your full name</label><input id="full-name" name="name" type="text" autocomplete="name" placeholder="e.g. Alex Morgan" aria-describedby="name-error" required><span class="field-error" id="name-error"></span>
+            <label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" aria-describedby="email-error" required><span class="field-error" id="email-error"></span>
+            <label for="plan">What are you thinking?</label><select id="plan" name="plan" aria-describedby="plan-error" required><option value="" selected disabled>Choose a starting point</option><option value="Basic">Basic — a thoughtful first run</option><option value="Pro">Pro — room to make a mark</option><option value="Business">Business — let’s make it a big thing</option><option value="Not sure yet">I’m not sure yet</option></select><span class="field-error" id="plan-error"></span>
+            <label class="checkbox-label" for="terms"><input id="terms" name="terms" type="checkbox" aria-describedby="terms-error" required><span>I agree to be contacted about my print enquiry.</span></label><span class="field-error field-error-terms" id="terms-error"></span>
             <button class="button button-accent form-submit btn btn--primary" type="submit">Start a conversation <span aria-hidden="true">↗</span></button>
-            <p class="form-note" id="form-note" role="status">This demo form isn’t connected to a submission service yet.</p>
+            <p class="form-note" id="form-note" role="status">Your signup is saved locally in this browser.</p>
           </form>
         </div>
       </section>
